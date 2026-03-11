@@ -1,4 +1,4 @@
-const authController = require("../Controller/authController");
+const authController = require("../Controller/auth.controller.js");
 const express = require("express");
 const router = express.Router();
 const passport = require("../config/passportGoogle.js");

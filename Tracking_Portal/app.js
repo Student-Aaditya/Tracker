@@ -7,7 +7,7 @@ const connectdB = require("./utils/mongoose.js");
 const passport = require("./config/passportGoogle.js");
 const authRoute = require("./Routes/authRoute.js");
 const useAdmin = require("./Routes/adminRoute.js");
-const developerRoutes = require("./Routes/developer.routes.js");
+const developerRoutes = require("./Routes/developerRoutes.js");
 const reporterRoutes = require("./Routes/reporterRoute.js");
 
 app.use(express.json());

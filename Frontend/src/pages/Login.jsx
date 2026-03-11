@@ -50,6 +50,7 @@ export default function Login() {
       localStorage.setItem("role", res.data.user.role);
 
       const role = res.data.user.role;
+      console.log(role);
       if(role === "administrator"){
         navigate("/admin");
       }
