@@ -311,7 +311,6 @@ export default function DeveloperDashboard() {
       setStatus("");
       setSelectedIssue(null);
       setActivePanel(null);
-      // Update UI immediately so status badge reflects new value
       setIssues((prev) =>
         prev.map((issue) =>
           issue._id === issueId ? { ...issue, status: newStatus } : issue
@@ -355,157 +354,270 @@ export default function DeveloperDashboard() {
     }
   };
 
+  const statusCounts = issues.reduce(
+    (acc, issue) => {
+      const key = issue.status || "open";
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    },
+    { open: 0, "in-progress": 0, resolved: 0, closed: 0 }
+  );
+
   return (
-    <div className="p-10">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Developer Dashboard</h1>
+    <div className="min-h-screen flex flex-col md:flex-row bg-slate-100">
+      {/* Sidebar */}
+      <aside className="w-full md:w-64 bg-gradient-to-b from-purple-600 via-indigo-600 to-blue-600 text-white flex flex-col py-6 px-5">
+        <div className="mb-8">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-white/15 flex items-center justify-center text-xl font-bold">
+              T
+            </div>
+            <div>
+              <p className="text-sm uppercase tracking-wide text-white/70">
+                Developer
+              </p>
+              <p className="text-base font-semibold">Dashboard</p>
+            </div>
+          </div>
+        </div>
+
+        <nav className="space-y-1 text-sm flex-1">
+          <p className="text-xs uppercase tracking-wide text-white/50 mb-1">
+            Main
+          </p>
+          <button className="w-full flex items-center gap-3 rounded-lg bg-white/15 px-3 py-2 text-left text-sm font-medium">
+            <span className="h-2 w-2 rounded-full bg-emerald-300" />
+            Issues
+          </button>
+        </nav>
+
         <button
-          type="button"
           onClick={handleSignout}
-          className="bg-red-500 text-white px-4 py-2 rounded"
+          className="mt-6 inline-flex items-center justify-center rounded-lg bg-white/15 px-3 py-2 text-xs font-medium text-white hover:bg-white/20"
         >
           Sign out
         </button>
-      </div>
+      </aside>
 
-      <h2 className="text-xl font-semibold mb-4">
-        Issues reported to you
-      </h2>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col">
+        {/* Top bar */}
+        <header className="px-4 md:px-8 py-5 border-b border-slate-200 bg-white flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs text-slate-500">Hi there,</p>
+            <h1 className="text-xl md:text-2xl font-semibold text-slate-900">
+              Developer Role
+            </h1>
+          </div>
 
-      <div className="grid grid-cols-3 gap-5">
-        {issues.map((issue) => (
-          <div key={issue._id} className="bg-white p-5 shadow rounded">
-            <h3 className="text-lg font-semibold">{issue.title}</h3>
+          <div className="flex items-center gap-3 text-xs lg:text-sm text-slate-500">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span>Working on {issues.length} assigned issue{issues.length === 1 ? "" : "s"}</span>
+          </div>
+        </header>
 
-            <p className="text-gray-600">{issue.description}</p>
-
-            <p className="text-sm text-gray-400">
-              Project : {issue.project?.name ?? issue.project}
-            </p>
-
-            <div className="flex items-center justify-between mt-3 gap-2">
-              <span
-                className={`px-2 py-1 text-xs font-medium rounded ${
-                  issue.status === "open"
-                    ? "bg-gray-200 text-gray-700"
-                    : issue.status === "in-progress"
-                    ? "bg-blue-200 text-blue-700"
-                    : issue.status === "resolved"
-                    ? "bg-green-200 text-green-700"
-                    : "bg-red-200 text-red-700"
-                }`}
-              >
-                {issue.status || "open"}
-              </span>
-
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextSelected =
-                      selectedIssue === issue._id ? null : issue._id;
-                    setSelectedIssue(nextSelected);
-                    setActivePanel(nextSelected ? "status" : null);
-                    setStatus(issue.status || "");
-                  }}
-                  className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700"
-                >
-                  Status
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextSelected =
-                      selectedIssue === issue._id ? null : issue._id;
-                    setSelectedIssue(nextSelected);
-                    setActivePanel(nextSelected ? "comments" : null);
-                    if (nextSelected) fetchIssueComments(issue._id);
-                  }}
-                  className="bg-gray-800 text-white px-3 py-1.5 rounded text-sm hover:bg-gray-900"
-                >
-                  Comments
-                </button>
-              </div>
-            </div>
-
-            {selectedIssue === issue._id && (
-              <div className="mt-4 pt-3 border-t">
-                {activePanel === "status" && (
-                  <>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Change status
-                    </label>
-                    <select
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                      className="border rounded px-3 py-2 w-full mb-2 text-sm"
+        {/* Content layout */}
+        <main className="flex-1 px-4 md:px-8 py-6 flex flex-col lg:flex-row gap-6">
+          {/* Issues column */}
+          <div className="flex-1 space-y-4">
+            <section>
+              <h2 className="text-base md:text-lg font-semibold lg:text-lg text-slate-900 mb-3">
+                Issues reported to you
+              </h2>
+              {issues.length === 0 ? (
+                <p className="text-xs text-slate-500">
+                  No issues have been assigned to you yet.
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                  {issues.map((issue) => (
+                    <div
+                      key={issue._id}
+                      className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col gap-3"
                     >
-                      {ISSUE_STATUS_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      type="button"
-                      onClick={() => updateStatus(issue._id)}
-                      className="bg-green-600 text-white px-3 py-1.5 rounded text-sm hover:bg-green-700"
-                    >
-                      Update Status
-                    </button>
-                  </>
-                )}
-
-                {activePanel === "comments" && (
-                  <>
-                    <div className="mb-3 max-h-40 overflow-y-auto pr-1 space-y-2">
-                      {(commentsByIssueId[issue._id] || []).map((c) => (
-                        <div
-                          key={c._id || c.createdAt}
-                          className="text-sm text-gray-700"
-                        >
-                          <span className="font-semibold">
-                            {c.user?.name || "User"}:
-                          </span>{" "}
-                          {c.message}
-                        </div>
-                      ))}
-                      {(commentsByIssueId[issue._id] || []).length === 0 && (
-                        <p className="text-sm text-gray-500">
-                          No comments yet.
+                      <div>
+                        <h3 className="text-sm lg:text-lg font-semibold text-slate-900">
+                          Issue Title: {issue.title}
+                        </h3>
+                        {issue.description && (
+                          <p className="mt-1 text-xs lg:text-sm text-slate-700 line-clamp-3">
+                           Issue Description: {issue.description}
+                          </p>
+                        )}
+                        <p className="mt-1 text-[11px] lg:text-sm text-slate-500">
+                          Project: {issue.project?.name ?? issue.project}
                         </p>
+                      </div>
+
+                      <div className="flex items-center  lg:py-2 justify-between gap-3">
+                        <span
+                          className={`px-2 py-1 text-[11px] text-sm font-medium rounded-full ${
+                            issue.status === "open"
+                              ? "bg-gray-200 text-gray-700"
+                              : issue.status === "in-progress"
+                              ? "bg-blue-200 text-blue-700"
+                              : issue.status === "resolved"
+                              ? "bg-green-200 text-green-700"
+                              : "bg-red-200 text-red-700"
+                          }`}
+                        >
+                          {issue.status || "open"}
+                        </span>
+
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const nextSelected =
+                                selectedIssue === issue._id ? null : issue._id;
+                              setSelectedIssue(nextSelected);
+                              setActivePanel(nextSelected ? "status" : null);
+                              setStatus(issue.status || "");
+                            }}
+                            className="rounded-full bg-blue-600 px-3 py-1 text-[11px] font-medium text-white hover:bg-blue-700"
+                          >
+                            Status
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const nextSelected =
+                                selectedIssue === issue._id ? null : issue._id;
+                              setSelectedIssue(nextSelected);
+                              setActivePanel(nextSelected ? "comments" : null);
+                              if (nextSelected) fetchIssueComments(issue._id);
+                            }}
+                            className="rounded-full bg-slate-900 px-3 py-1 text-[11px] font-medium text-white hover:bg-slate-950"
+                          >
+                            Comments
+                          </button>
+                        </div>
+                      </div>
+
+                      {selectedIssue === issue._id && (
+                        <div className="mt-3 pt-3 border-t border-slate-100">
+                          {activePanel === "status" && (
+                            <>
+                              <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                                Change status
+                              </label>
+                              <select
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                              >
+                                {ISSUE_STATUS_OPTIONS.map((opt) => (
+                                  <option key={opt} value={opt}>
+                                    {opt}
+                                  </option>
+                                ))}
+                              </select>
+                              <button
+                                type="button"
+                                onClick={() => updateStatus(issue._id)}
+                                className="rounded-lg bg-green-600 px-3 py-2 text-[11px] font-semibold text-white hover:bg-green-700"
+                              >
+                                Update status
+                              </button>
+                            </>
+                          )}
+
+                          {activePanel === "comments" && (
+                            <>
+                              <div className="mb-3 max-h-32 overflow-y-auto pr-1 space-y-1">
+                                {(commentsByIssueId[issue._id] || []).map(
+                                  (c) => (
+                                    <div
+                                      key={c._id || c.createdAt}
+                                      className="text-[11px] text-slate-700"
+                                    >
+                                      <span className="font-semibold">
+                                        {c.user?.name || "User"}:
+                                      </span>{" "}
+                                      {c.message}
+                                    </div>
+                                  )
+                                )}
+                                {(commentsByIssueId[issue._id] || []).length ===
+                                  0 && (
+                                  <p className="text-[11px] text-slate-400">
+                                    No comments yet.
+                                  </p>
+                                )}
+                              </div>
+
+                              <textarea
+                                value={commentMessage}
+                                onChange={(e) =>
+                                  setCommentMessage(e.target.value)
+                                }
+                                placeholder="Write a comment…"
+                                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                              />
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    addReporterThreadComment(issue._id)
+                                  }
+                                  className="rounded-lg bg-blue-600 px-3 py-2 text-[11px] font-semibold text-white hover:bg-blue-700"
+                                >
+                                  Add comment
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => fetchIssueComments(issue._id)}
+                                  className="rounded-lg bg-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-700 hover:bg-slate-200"
+                                >
+                                  Refresh
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       )}
                     </div>
-
-                    <textarea
-                      value={commentMessage}
-                      onChange={(e) => setCommentMessage(e.target.value)}
-                      placeholder="Write a comment…"
-                      className="border rounded px-3 py-2 w-full mb-2 text-sm"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => addReporterThreadComment(issue._id)}
-                        className="bg-blue-600 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700"
-                      >
-                        Add Comment
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => fetchIssueComments(issue._id)}
-                        className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded text-sm hover:bg-gray-300"
-                      >
-                        Refresh
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </section>
           </div>
-        ))}
+
+          {/* Right column: status summary */}
+          <div className="w-full lg:max-w-sm space-y-5">
+            <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+              <h3 className="text-sm font-semibold lg:text-lg text-slate-900 mb-3">
+                Status summary
+              </h3>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="rounded-xl bg-slate-50 px-3 py-3">
+                  <p className="text-[11px] lg:text-sm text-slate-500">Open</p>
+                  <p className="text-lg font-semibold text-slate-900">
+                    {statusCounts.open}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-blue-50 px-3 py-3">
+                  <p className="text-[11px] lg:text-sm text-blue-700/80">In progress</p>
+                  <p className="text-lg font-semibold text-blue-800">
+                    {statusCounts["in-progress"]}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-emerald-50 px-3 py-3">
+                  <p className="text-[11px] lg:text-sm text-emerald-700/80">Resolved</p>
+                  <p className="text-lg font-semibold text-emerald-800">
+                    {statusCounts.resolved}
+                  </p>
+                </div>
+                <div className="rounded-xl bg-rose-50 px-3 py-3">
+                  <p className="text-[11px] lg:text-sm text-rose-700/80">Closed</p>
+                  <p className="text-lg font-semibold text-rose-800">
+                    {statusCounts.closed}
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </main>
       </div>
     </div>
   );
