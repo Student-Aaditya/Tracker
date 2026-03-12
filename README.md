@@ -1,5 +1,6 @@
 Issue Tracker (MERN Stack Project)
-Project Overview
+
+#Project Overview
 
 This is a full-stack Issue Tracking System built using the MERN stack (MongoDB, Express, React, Node.js).
 
@@ -13,7 +14,8 @@ Frontend – built with React, Vite, and Tailwind CSS
 
 Backend – built with Node.js, Express, and MongoDB
 
-Technologies Used
+
+#Technologies Used
 
 Frontend:-
 
@@ -25,7 +27,7 @@ Tailwind CSS
 
 Axios
 
-Backend :-
+#Backend :-
 
 Node.js
 
@@ -40,7 +42,7 @@ JWT Authentication
 Bcrypt
 
 
-User Roles
+#User Roles
 
 The system supports three types of users.
 
@@ -58,7 +60,7 @@ Assign issues to developers
 
 Manage project workflow
 
-Developer
+#Developer
 
 Developers work on issues assigned to them.
 
@@ -72,7 +74,7 @@ Update issue status (Open, In Progress, Resolved, Closed)
 
 Add comments to discussions
 
-Reporter
+#Reporter
 
 Reporters create issues or feature requests.
 
@@ -84,14 +86,15 @@ Submit feature requests
 
 Track the progress of their issues
 
-Install Dependencies:-
+##Install Dependencies:-
 
-Frontend :-
+#Frontend :-
 
 cd Frontend
 npm install
 
-Backend:-
+#Backend:-
+
 cd Tracking_Portal
 npm install
 
@@ -102,16 +105,16 @@ nodemon app.js
 Backend run on server :- hhtp://localhost:8080/
 
 
-Start Frontend
+#Start Frontend
 
 Open another terminal and run:
 cd Frontend
 npm run dev
 
-Frontend run on server :- http://localhost:5173/
+#Frontend run on server :- http://localhost:5173/
 
 
-Application Workflow
+#Application Workflow
 
 User registers a new account.
 
