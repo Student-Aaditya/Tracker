@@ -15,16 +15,16 @@ const getMyProjects = async (req, res) => {
 
       const issues = await Issue.find({
         project: project._id,
-        assignedTo: req.user.id
+        assignedTo: req.user.id,
       })
       .populate("createdBy", "name email")
-      .populate("assignedTo", "name email");
+      .populate("assignedTo", "name email title");
 
       result.push({
         projectId: project._id,
         projectName: project.name,
         description: project.description,
-        issues
+        issues:issues
       });
 
     }
@@ -45,6 +45,39 @@ const getMyProjects = async (req, res) => {
 
 };
 
+//getUserProjectissue
+const getUserProjectIssues = async (req, res) => {
+  try {
+
+    const userId = req.user.id;
+    // Step 1: find projects where user is member
+    const projects = await Project.find({
+      members: userId
+    });
+
+    const projectIds = projects.map((project) => project._id);
+
+    // Step 2: find issues using projectIds; populate project so frontend can show project name
+    const issues = await Issue.find({
+      project: { $in: projectIds }
+    })
+    .select("title description project status comments")
+    .populate("project", "name");
+
+    res.status(200).json({
+      projects: projectIds,
+      issues
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
+
+  }
+};
 
 const getAssignedIssues = async (req, res) => {
 
@@ -217,5 +250,6 @@ module.exports = {
   updateIssueStatus,
   addComment,
   getAssignedTasks,
-  getIssuesByProject
+  getIssuesByProject,
+  getUserProjectIssues
 };

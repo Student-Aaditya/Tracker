@@ -1,8 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 8080;
 const cors = require("cors");
-require("dotenv").config();
 const connectdB = require("./utils/mongoose.js");
 const passport = require("./config/passportGoogle.js");
 const authRoute = require("./Routes/authRoute.js");

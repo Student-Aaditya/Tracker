@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://localhost:6525";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ export default function Login() {
       localStorage.setItem("role", res.data.user.role);
 
       const role = res.data.user.role;
-      console.log(role);
+      alert("login successful");
       if(role === "administrator"){
         navigate("/admin");
       }

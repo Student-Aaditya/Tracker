@@ -9,7 +9,7 @@ const authorizeRoles = require("../Middleware/role.middleware.js");
 // Get developer projects
 router.get("/projects",auth,authorizeRoles("developer"),developerController.getMyProjects);
 // Get issues by project
-router.get("/projects/:projectId/issues",auth,authorizeRoles("developer"),developerController.getIssuesByProject);
+router.get("/projects/:projectId/issues",authorizeRoles("developer"),developerController.getIssuesByProject);
 
 //get assign issues
 router.get("/issues",auth,authorizeRoles("developer"),developerController.getAssignedIssues);
@@ -17,6 +17,8 @@ router.get("/issues",auth,authorizeRoles("developer"),developerController.getAss
 // assigned tasks
 router.get("/tasks",auth,authorizeRoles("developer"),developerController.getAssignedTasks);
 
+//user project issues
+router.get("/user/issues", auth, authorizeRoles("developer"), developerController.getUserProjectIssues) ;
 // Update issue status
 router.patch("/issues/:issueId/status",auth,authorizeRoles("developer"),developerController.updateIssueStatus);
 

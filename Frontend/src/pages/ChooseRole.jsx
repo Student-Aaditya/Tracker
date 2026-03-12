@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://localhost:6525";
 
 export default function ChooseRole() {
   const navigate = useNavigate();

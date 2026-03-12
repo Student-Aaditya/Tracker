@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = "http://localhost:6525";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ export default function Register() {
         password,
         role,
       });
+      alert("Registration successful. Please log in.");
       navigate("/", { state: { registered: true } });
     } catch (err) {
       setError(err.response?.data?.msg || "Registration failed.");

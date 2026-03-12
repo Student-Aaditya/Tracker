@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function ReporterDashboard() {
     const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
     const [projects, setProjects] = useState([]);
     const [issues, setIssues] = useState([]);
@@ -20,6 +22,12 @@ export default function ReporterDashboard() {
     const [issueTitle, setIssueTitle] = useState("");
     const [issueDescription, setIssueDescription] = useState("");
     const [selectedProject, setSelectedProject] = useState("");
+
+    const handleSignout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        navigate("/");
+    };
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -27,13 +35,13 @@ export default function ReporterDashboard() {
                 setError("");
 
                 const [projectsRes, issuesRes, featureRes] = await Promise.all([
-                    axios.get("http://localhost:8080/api/reporter/my-projects", {
+                    axios.get("http://localhost:6525/api/reporter/my-projects", {
                         headers: { Authorization: token },
                     }),
-                    axios.get("http://localhost:8080/api/reporter/my-issues", {
+                    axios.get("http://localhost:6525/api/reporter/my-issues", {
                         headers: { Authorization: token },
                     }),
-                    axios.get("http://localhost:8080/api/reporter/feature-requests", {
+                    axios.get("http://localhost:6525/api/reporter/feature-requests", {
                         headers: { Authorization: token },
                     }),
                 ]);
@@ -56,7 +64,7 @@ export default function ReporterDashboard() {
         try {
 
             await axios.post(
-                "http://localhost:8080/api/reporter/issue",
+                "http://localhost:6525/api/reporter/issue",
                 {
                     title: issueTitle,
                     description: issueDescription,
@@ -86,7 +94,7 @@ export default function ReporterDashboard() {
             setFeatureError("");
 
             await axios.post(
-                "http://localhost:8080/api/reporter/feature-request",
+                "http://localhost:6525/api/reporter/feature-request",
                 {
                     title: featureTitle,
                     description: featureDescription,
@@ -101,7 +109,7 @@ export default function ReporterDashboard() {
             setIsFeatureFormOpen(false);
 
             const res = await axios.get(
-                "http://localhost:8080/api/reporter/feature-requests",
+                "http://localhost:6525/api/reporter/feature-requests",
                 { headers: { Authorization: token } }
             );
             setFeatureRequests(res.data.requests || []);
@@ -119,7 +127,7 @@ export default function ReporterDashboard() {
 
         try {
             await axios.post(
-                `http://localhost:8080/api/reporter/feature-request/${requestId}/comment`,
+                `http://localhost:6525/api/reporter/feature-request/${requestId}/comment`,
                 { message },
                 { headers: { Authorization: token } }
             );
@@ -127,7 +135,7 @@ export default function ReporterDashboard() {
             setFeatureComments((prev) => ({ ...prev, [requestId]: "" }));
 
             const res = await axios.get(
-                "http://localhost:8080/api/reporter/feature-requests",
+                "http://localhost:6525/api/reporter/feature-requests",
                 { headers: { Authorization: token } }
             );
             setFeatureRequests(res.data.requests || []);
@@ -138,7 +146,16 @@ export default function ReporterDashboard() {
 
     return (
         <div className="p-10 bg-gray-100 min-h-screen">
-            <h1 className="text-3xl font-bold mb-4">Reporter Dashboard</h1>
+            <div className="flex items-center justify-between mb-4">
+                <h1 className="text-3xl font-bold">Reporter Dashboard</h1>
+                <button
+                    type="button"
+                    onClick={handleSignout}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                >
+                    Sign out
+                </button>
+            </div>
 
             <p className="mb-6 text-gray-700">
                 View the projects you are assigned to and track the issues you have

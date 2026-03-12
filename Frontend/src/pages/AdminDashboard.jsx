@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function AdminDashboard() {
 
 const token = localStorage.getItem("token");
+const navigate = useNavigate();
 
 const [view,setView] = useState("projects");
 const [projects,setProjects] = useState([]);
@@ -33,11 +35,17 @@ useEffect(()=>{
 fetchProjects();
 },[]);
 
+const handleSignout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  navigate("/");
+};
+
 
 const fetchProjects = async ()=>{
 try{
 const res = await axios.get(
-"http://localhost:8080/api/admin/projects",
+"http://localhost:6525/api/admin/projects",
 {headers:{Authorization:token}}
 );
 setProjects(res.data.projects);
@@ -50,7 +58,7 @@ console.log(err);
 const createProject = async()=>{
 try{
 await axios.post(
-"http://localhost:8080/api/admin/projects",
+"http://localhost:6525/api/admin/projects",
 {name,description},
 {headers:{Authorization:token}}
 );
@@ -65,7 +73,7 @@ alert("Error creating project");
 const createMember = async()=>{
 try{
 await axios.post(
-"http://localhost:8080/api/admin/members",
+"http://localhost:6525/api/admin/members",
 {
 name:memberName,
 email:memberEmail,
@@ -84,7 +92,7 @@ alert("Error creating member");
 const createIssue = async()=>{
 try{
 await axios.post(
-"http://localhost:8080/api/admin/issues",
+"http://localhost:6525/api/admin/issues",
 {
 title:issueTitle,
 description:issueDesc,
@@ -104,7 +112,7 @@ const viewMembers = async (projectId) => {
 try{
 
 const res = await axios.get(
-`http://localhost:8080/api/admin/projects/${projectId}`,
+`http://localhost:6525/api/admin/projects/${projectId}`,
 {headers:{Authorization:token}}
 );
 
@@ -122,7 +130,7 @@ const addMemberToProject = async () => {
 try{
 
 await axios.post(
-`http://localhost:8080/api/admin/projects/${selectedProject}/members`,
+`http://localhost:6525/api/admin/projects/${selectedProject}/members`,
 {userId:memberId},
 {headers:{Authorization:token}}
 );
@@ -139,7 +147,7 @@ const fetchMembers = async () => {
 try{
 
 const res = await axios.get(
-"http://localhost:8080/api/admin/members",
+"http://localhost:6525/api/admin/members",
 {headers:{Authorization:token}}
 );
 
@@ -160,9 +168,17 @@ return(
 
 <div className="min-h-screen bg-gray-100 p-10">
 
-<h1 className="text-3xl font-bold mb-8">
+<div className="flex items-center justify-between mb-8">
+<h1 className="text-3xl font-bold">
 Administrator Dashboard
 </h1>
+<button
+onClick={handleSignout}
+className="bg-red-500 text-white px-4 py-2 rounded"
+>
+Sign out
+</button>
+</div>
 
 
 <div className="flex gap-4 mb-8">
