@@ -22,6 +22,8 @@ export default function ReporterDashboard() {
     const [issueTitle, setIssueTitle] = useState("");
     const [issueDescription, setIssueDescription] = useState("");
     const [selectedProject, setSelectedProject] = useState("");
+    const [issueCommentsById, setIssueCommentsById] = useState({});
+    const [activeIssueId, setActiveIssueId] = useState(null);
 
     const handleSignout = () => {
         localStorage.removeItem("token");
@@ -79,6 +81,21 @@ export default function ReporterDashboard() {
             console.log(err);
         }
 
+    };
+
+    const fetchIssueCommentsForReporter = async (issueId) => {
+        try {
+            const res = await axios.get(
+                `http://localhost:6525/api/reporter/issue/${issueId}`,
+                { headers: { Authorization: token } }
+            );
+            setIssueCommentsById((prev) => ({
+                ...prev,
+                [issueId]: Array.isArray(res.data.comments) ? res.data.comments : [],
+            }));
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     const handleSubmitFeatureRequest = async (e) => {
@@ -286,7 +303,10 @@ export default function ReporterDashboard() {
 
                     </div>
                     <div className="bg-white rounded-xl shadow p-6 lg:col-span-1">
-                        <h2 className="text-xl font-semibold mb-3">My Reported Issues</h2>
+                        <h2 className="text-xl font-semibold mb-1">My Reported Issues</h2>
+                        <p className="text-xs text-gray-500 mb-3">
+                            Below you can see developer updates and comments on the issues you reported.
+                        </p>
 
                         {issues.length === 0 ? (
                             <p className="text-gray-600 text-sm">
@@ -330,6 +350,46 @@ export default function ReporterDashboard() {
                                                 Assigned to: {issue.assignedTo.name} (
                                                 {issue.assignedTo.email})
                                             </p>
+                                        )}
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const nextId = activeIssueId === issue._id ? null : issue._id;
+                                                setActiveIssueId(nextId);
+                                                if (nextId) {
+                                                    fetchIssueCommentsForReporter(issue._id);
+                                                }
+                                            }}
+                                            className="mt-3 bg-gray-800 text-white px-3 py-1 rounded text-xs"
+                                        >
+                                            {activeIssueId === issue._id ? "Hide updates" : "View developer updates"}
+                                        </button>
+
+                                        {activeIssueId === issue._id && (
+                                            <div className="mt-3 border-t pt-2">
+                                                <h4 className="text-xs font-semibold text-gray-700 mb-1">
+                                                    Conversation with developers
+                                                </h4>
+                                                <div className="space-y-1 max-h-32 overflow-y-auto pr-1">
+                                                    {(issueCommentsById[issue._id] || []).map((c) => (
+                                                        <p
+                                                            key={c._id || c.createdAt}
+                                                            className="text-xs text-gray-600"
+                                                        >
+                                                            <span className="font-medium">
+                                                                {c.user?.name || "User"}:
+                                                            </span>{" "}
+                                                            {c.message || c.comment}
+                                                        </p>
+                                                    ))}
+                                                    {(issueCommentsById[issue._id] || []).length === 0 && (
+                                                        <p className="text-xs text-gray-500">
+                                                            No updates from developers yet.
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
                                 ))}

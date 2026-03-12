@@ -368,6 +368,10 @@ export default function DeveloperDashboard() {
         </button>
       </div>
 
+      <h2 className="text-xl font-semibold mb-4">
+        Issues reported to you
+      </h2>
+
       <div className="grid grid-cols-3 gap-5">
         {issues.map((issue) => (
           <div key={issue._id} className="bg-white p-5 shadow rounded">
