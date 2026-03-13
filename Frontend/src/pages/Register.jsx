@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const API_BASE = "https://tracker-7s62.onrender.com";
+const API_BASE = "https://tracker-backend-o90y.onrender.com";
 
 export default function Register() {
   const navigate = useNavigate();

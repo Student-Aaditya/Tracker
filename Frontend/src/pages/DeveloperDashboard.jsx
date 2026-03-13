@@ -287,7 +287,7 @@ export default function DeveloperDashboard() {
   const fetchIssues = async () => {
     try {
       const res = await axios.get(
-        "https://tracker-7s62.onrender.com/api/developer/user/issues",
+        "https://tracker-backend-o90y.onrender.com/api/developer/user/issues",
         { headers: { Authorization: token } }
       );
       setIssues(res.data.issues || []);
@@ -304,7 +304,7 @@ export default function DeveloperDashboard() {
     const newStatus = status;
     try {
       await axios.patch(
-        `https://tracker-7s62.onrender.com/api/developer/issues/${issueId}/status`,
+        `https://tracker-backend-o90y.onrender.com/api/developer/issues/${issueId}/status`,
         { status: newStatus },
         { headers: { Authorization: token } }
       );
@@ -324,7 +324,7 @@ export default function DeveloperDashboard() {
   const fetchIssueComments = async (issueId) => {
     try {
       const res = await axios.get(
-        `https://tracker-7s62.onrender.com/api/reporter/issue/${issueId}`,
+        `https://tracker-backend-o90y.onrender.com/api/reporter/issue/${issueId}`,
         { headers: { Authorization: token } }
       );
       setCommentsByIssueId((prev) => ({
@@ -343,7 +343,7 @@ export default function DeveloperDashboard() {
     }
     try {
       await axios.post(
-        `https://tracker-7s62.onrender.com/api/reporter/issue/${issueId}/comment`,
+        `https://tracker-backend-o90y.onrender.com/api/reporter/issue/${issueId}/comment`,
         { message: commentMessage },
         { headers: { Authorization: token } }
       );

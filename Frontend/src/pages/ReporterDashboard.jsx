@@ -40,13 +40,13 @@ export default function ReporterDashboard() {
         setError("");
 
         const [projectsRes, issuesRes, featureRes] = await Promise.all([
-          axios.get("https://tracker-7s62.onrender.com/api/reporter/my-projects", {
+          axios.get("https://tracker-backend-o90y.onrender.com/api/reporter/my-projects", {
             headers: { Authorization: token },
           }),
-          axios.get("https://tracker-7s62.onrender.com/api/reporter/my-issues", {
+          axios.get("https://tracker-backend-o90y.onrender.com/api/reporter/my-issues", {
             headers: { Authorization: token },
           }),
-          axios.get("https://tracker-7s62.onrender.com/api/reporter/feature-requests", {
+          axios.get("https://tracker-backend-o90y.onrender.com/api/reporter/feature-requests", {
             headers: { Authorization: token },
           }),
         ]);
@@ -68,7 +68,7 @@ export default function ReporterDashboard() {
   const submitIssue = async () => {
     try {
       await axios.post(
-        "https://tracker-7s62.onrender.com/api/reporter/issue",
+        "https://tracker-backend-o90y.onrender.com/api/reporter/issue",
         {
           title: issueTitle,
           description: issueDescription,
@@ -89,7 +89,7 @@ export default function ReporterDashboard() {
   const fetchIssueCommentsForReporter = async (issueId) => {
     try {
       const res = await axios.get(
-        `https://tracker-7s62.onrender.com/api/reporter/issue/${issueId}`,
+        `https://tracker-backend-o90y.onrender.com/api/reporter/issue/${issueId}`,
         { headers: { Authorization: token } }
       );
       setIssueCommentsById((prev) => ({
@@ -114,7 +114,7 @@ export default function ReporterDashboard() {
       setFeatureError("");
 
       await axios.post(
-        "https://tracker-7s62.onrender.com/api/reporter/feature-request",
+        "https://tracker-backend-o90y.onrender.com/api/reporter/feature-request",
         {
           title: featureTitle,
           description: featureDescription,
@@ -129,7 +129,7 @@ export default function ReporterDashboard() {
       setIsFeatureFormOpen(false);
 
       const res = await axios.get(
-        "https://tracker-7s62.onrender.com/api/reporter/feature-requests",
+        "https://tracker-backend-o90y.onrender.com/api/reporter/feature-requests",
         { headers: { Authorization: token } }
       );
       setFeatureRequests(res.data.requests || []);
@@ -147,7 +147,7 @@ export default function ReporterDashboard() {
 
     try {
       await axios.post(
-        `https://tracker-7s62.onrender.com/api/reporter/feature-request/${requestId}/comment`,
+        `https://tracker-backend-o90y.onrender.com/api/reporter/feature-request/${requestId}/comment`,
         { message },
         { headers: { Authorization: token } }
       );
@@ -155,7 +155,7 @@ export default function ReporterDashboard() {
       setFeatureComments((prev) => ({ ...prev, [requestId]: "" }));
 
       const res = await axios.get(
-        "https://tracker-7s62.onrender.com/api/reporter/feature-requests",
+        "https://tracker-backend-o90y.onrender.com/api/reporter/feature-requests",
         { headers: { Authorization: token } }
       );
       setFeatureRequests(res.data.requests || []);
