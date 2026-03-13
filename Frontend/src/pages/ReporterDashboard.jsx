@@ -40,13 +40,13 @@ export default function ReporterDashboard() {
         setError("");
 
         const [projectsRes, issuesRes, featureRes] = await Promise.all([
-          axios.get("http://localhost:6525/api/reporter/my-projects", {
+          axios.get("187.77.187.252:6525/api/reporter/my-projects", {
             headers: { Authorization: token },
           }),
-          axios.get("http://localhost:6525/api/reporter/my-issues", {
+          axios.get("187.77.187.252:6525/api/reporter/my-issues", {
             headers: { Authorization: token },
           }),
-          axios.get("http://localhost:6525/api/reporter/feature-requests", {
+          axios.get("187.77.187.252:6525/api/reporter/feature-requests", {
             headers: { Authorization: token },
           }),
         ]);
@@ -68,7 +68,7 @@ export default function ReporterDashboard() {
   const submitIssue = async () => {
     try {
       await axios.post(
-        "http://localhost:6525/api/reporter/issue",
+        "187.77.187.252:6525/api/reporter/issue",
         {
           title: issueTitle,
           description: issueDescription,
@@ -89,7 +89,7 @@ export default function ReporterDashboard() {
   const fetchIssueCommentsForReporter = async (issueId) => {
     try {
       const res = await axios.get(
-        `http://localhost:6525/api/reporter/issue/${issueId}`,
+        `187.77.187.252:6525/api/reporter/issue/${issueId}`,
         { headers: { Authorization: token } }
       );
       setIssueCommentsById((prev) => ({
@@ -114,7 +114,7 @@ export default function ReporterDashboard() {
       setFeatureError("");
 
       await axios.post(
-        "http://localhost:6525/api/reporter/feature-request",
+        "187.77.187.252:6525/api/reporter/feature-request",
         {
           title: featureTitle,
           description: featureDescription,
@@ -129,7 +129,7 @@ export default function ReporterDashboard() {
       setIsFeatureFormOpen(false);
 
       const res = await axios.get(
-        "http://localhost:6525/api/reporter/feature-requests",
+        "187.77.187.252:6525/api/reporter/feature-requests",
         { headers: { Authorization: token } }
       );
       setFeatureRequests(res.data.requests || []);
@@ -147,7 +147,7 @@ export default function ReporterDashboard() {
 
     try {
       await axios.post(
-        `http://localhost:6525/api/reporter/feature-request/${requestId}/comment`,
+        `187.77.187.252:6525/api/reporter/feature-request/${requestId}/comment`,
         { message },
         { headers: { Authorization: token } }
       );
@@ -155,7 +155,7 @@ export default function ReporterDashboard() {
       setFeatureComments((prev) => ({ ...prev, [requestId]: "" }));
 
       const res = await axios.get(
-        "http://localhost:6525/api/reporter/feature-requests",
+        "187.77.187.252:6525/api/reporter/feature-requests",
         { headers: { Authorization: token } }
       );
       setFeatureRequests(res.data.requests || []);

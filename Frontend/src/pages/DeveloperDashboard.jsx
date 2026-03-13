@@ -287,7 +287,7 @@ export default function DeveloperDashboard() {
   const fetchIssues = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:6525/api/developer/user/issues",
+        "187.77.187.252:6525/api/developer/user/issues",
         { headers: { Authorization: token } }
       );
       setIssues(res.data.issues || []);
@@ -304,7 +304,7 @@ export default function DeveloperDashboard() {
     const newStatus = status;
     try {
       await axios.patch(
-        `http://localhost:6525/api/developer/issues/${issueId}/status`,
+        `187.77.187.252:6525/api/developer/issues/${issueId}/status`,
         { status: newStatus },
         { headers: { Authorization: token } }
       );
@@ -324,7 +324,7 @@ export default function DeveloperDashboard() {
   const fetchIssueComments = async (issueId) => {
     try {
       const res = await axios.get(
-        `http://localhost:6525/api/reporter/issue/${issueId}`,
+        `187.77.187.252:6525/api/reporter/issue/${issueId}`,
         { headers: { Authorization: token } }
       );
       setCommentsByIssueId((prev) => ({
@@ -343,7 +343,7 @@ export default function DeveloperDashboard() {
     }
     try {
       await axios.post(
-        `http://localhost:6525/api/reporter/issue/${issueId}/comment`,
+        `187.77.187.252:6525/api/reporter/issue/${issueId}/comment`,
         { message: commentMessage },
         { headers: { Authorization: token } }
       );

@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:6525/api/admin/projects", {
+      const res = await axios.get("187.77.187.252:6525/api/admin/projects", {
         headers: { Authorization: token },
       });
       setProjects(res.data.projects);
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
   const createProject = async () => {
     try {
       await axios.post(
-        "http://localhost:6525/api/admin/projects",
+        "187.77.187.252:6525/api/admin/projects",
         { name, description },
         { headers: { Authorization: token } }
       );
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   const createMember = async () => {
     try {
       await axios.post(
-        "http://localhost:6525/api/admin/members",
+        "187.77.187.252:6525/api/admin/members",
         {
           name: memberName,
           email: memberEmail,
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
   const createIssue = async () => {
     try {
       await axios.post(
-        "http://localhost:6525/api/admin/issues",
+        "187.77.187.252:6525/api/admin/issues",
         {
           title: issueTitle,
           description: issueDesc,
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
   const viewMembers = async (projectId) => {
     try {
       const res = await axios.get(
-        `http://localhost:6525/api/admin/projects/${projectId}`,
+        `187.77.187.252:6525/api/admin/projects/${projectId}`,
         { headers: { Authorization: token } }
       );
 
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
   const addMemberToProject = async () => {
     try {
       await axios.post(
-        `http://localhost:6525/api/admin/projects/${selectedProject}/members`,
+        `187.77.187.252:6525/api/admin/projects/${selectedProject}/members`,
         { userId: memberId },
         { headers: { Authorization: token } }
       );
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
 
   const fetchMembers = async () => {
     try {
-      const res = await axios.get("http://localhost:6525/api/admin/members", {
+      const res = await axios.get("187.77.187.252:6525/api/admin/members", {
         headers: { Authorization: token },
       });
 
