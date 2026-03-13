@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("187.77.187.252:6525/api/admin/projects", {
+      const res = await axios.get("https://tracker-7s62.onrender.com/api/admin/projects", {
         headers: { Authorization: token },
       });
       setProjects(res.data.projects);
@@ -52,7 +52,7 @@ export default function AdminDashboard() {
   const createProject = async () => {
     try {
       await axios.post(
-        "187.77.187.252:6525/api/admin/projects",
+        "https://tracker-7s62.onrender.com/api/admin/projects",
         { name, description },
         { headers: { Authorization: token } }
       );
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   const createMember = async () => {
     try {
       await axios.post(
-        "187.77.187.252:6525/api/admin/members",
+        "https://tracker-7s62.onrender.com/api/admin/members",
         {
           name: memberName,
           email: memberEmail,
@@ -90,7 +90,7 @@ export default function AdminDashboard() {
   const createIssue = async () => {
     try {
       await axios.post(
-        "187.77.187.252:6525/api/admin/issues",
+        "https://tracker-7s62.onrender.com/api/admin/issues",
         {
           title: issueTitle,
           description: issueDesc,
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
   const viewMembers = async (projectId) => {
     try {
       const res = await axios.get(
-        `187.77.187.252:6525/api/admin/projects/${projectId}`,
+        `https://tracker-7s62.onrender.com/api/admin/projects/${projectId}`,
         { headers: { Authorization: token } }
       );
 
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
   const addMemberToProject = async () => {
     try {
       await axios.post(
-        `187.77.187.252:6525/api/admin/projects/${selectedProject}/members`,
+        `https://tracker-7s62.onrender.com/api/admin/projects/${selectedProject}/members`,
         { userId: memberId },
         { headers: { Authorization: token } }
       );
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
 
   const fetchMembers = async () => {
     try {
-      const res = await axios.get("187.77.187.252:6525/api/admin/members", {
+      const res = await axios.get("https://tracker-7s62.onrender.com/api/admin/members", {
         headers: { Authorization: token },
       });
 

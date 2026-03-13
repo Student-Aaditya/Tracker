@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_BASE = "187.77.187.252:6525";
+const API_BASE = "https://tracker-7s62.onrender.com";
 
 export default function ChooseRole() {
   const navigate = useNavigate();
