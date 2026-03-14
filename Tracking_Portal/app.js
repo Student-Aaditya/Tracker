@@ -13,8 +13,15 @@ const reporterRoutes = require("./Routes/reporterRoute.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(passport.initialize());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://tracker-7s62.onrender.com"
+    ],
+    credentials: true
+  })
+);app.use(passport.initialize());
 connectdB();
 app.get("/",(req,res)=>{
     res.send("hello world");
