@@ -4,7 +4,6 @@ const User = require("../Modal/register.modal.js");
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const CALLBACK_URL = process.env.CALLBACK_URL || "/api/auth/google/callback";
 
 if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
   passport.use(
@@ -12,7 +11,7 @@ if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
       {
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: CALLBACK_URL,
+        callbackURL: "https://tracker-backend-o90y.onrender.com/api/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
