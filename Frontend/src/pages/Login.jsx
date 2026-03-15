@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const API_BASE = "https://tracker-backend-o90y.onrender.com";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,8 +23,7 @@ export default function Login() {
       return;
     }
     if (token && role) {
-      localStorage.setItem("token", token);
-      localStorage.setItem("role", decodeURIComponent(role));
+      setAuth({ token, role: decodeURIComponent(role) });
       window.history.replaceState({}, "", window.location.pathname);
       const r = decodeURIComponent(role);
       if (r === "pending") {
@@ -33,7 +34,7 @@ export default function Login() {
       else if (r === "developer") navigate("/developer");
       else navigate("/reporter");
     }
-  }, [navigate]);
+  }, [navigate, setAuth]);
 
   const handleLogin = async (e) => {
 
@@ -46,18 +47,15 @@ export default function Login() {
         { email, password }
       );
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.user.role);
+      setAuth({ token: res.data.token, role: res.data.user.role });
 
       const role = res.data.user.role;
       alert("login successful");
-      if(role === "administrator"){
+      if (role === "administrator") {
         navigate("/admin");
-      }
-      else if(role === "developer"){
+      } else if (role === "developer") {
         navigate("/developer");
-      }
-      else{
+      } else {
         navigate("/reporter");
       }
 

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext.jsx";
 
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -8,15 +9,11 @@ import DeveloperDashboard from "./pages/DeveloperDashboard.jsx";
 import ReporterDashboard from "./pages/ReporterDashboard.jsx";
 
 function App() {
-
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const { token, role } = useAuth();
 
   return (
     <BrowserRouter>
-
       <Routes>
-
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/choose-role" element={<ChooseRole />} />

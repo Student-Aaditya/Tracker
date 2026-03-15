@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const API_BASE = "https://tracker-backend-o90y.onrender.com";
 
 export default function ChooseRole() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const { token, role: existingRole, setAuth } = useAuth();
 
   const [role, setRole] = useState("reporter");
   const [loading, setLoading] = useState(false);
@@ -14,13 +15,12 @@ export default function ChooseRole() {
 
   useEffect(() => {
     if (!token) navigate("/");
-    const existingRole = localStorage.getItem("role");
     if (existingRole && existingRole !== "pending") {
       if (existingRole === "administrator") navigate("/admin");
       else if (existingRole === "developer") navigate("/developer");
       else navigate("/reporter");
     }
-  }, [navigate, token]);
+  }, [navigate, token, existingRole]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,8 +33,7 @@ export default function ChooseRole() {
         { headers: { Authorization: token } }
       );
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.user.role);
+      setAuth({ token: res.data.token, role: res.data.user.role });
 
       if (res.data.user.role === "administrator") navigate("/admin");
       else if (res.data.user.role === "developer") navigate("/developer");
